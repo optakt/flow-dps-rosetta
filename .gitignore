@@ -1,0 +1,4 @@
+/cmd/flow-rosetta-server/flow-rosetta-server
+*.cdc
+*.checkpoint
+*.log
