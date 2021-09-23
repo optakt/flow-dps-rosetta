@@ -2,3 +2,4 @@
 *.cdc
 *.checkpoint
 *.log
+flow-go/
