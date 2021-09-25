@@ -69,6 +69,7 @@ func run() int {
 		flagPort         uint16
 		flagTransactions uint
 		flagSmart        bool
+		flagWait         bool
 	)
 
 	pflag.StringVarP(&flagDPS, "dps-api", "a", "127.0.0.1:5005", "host address for GRPC API endpoint")
@@ -78,6 +79,7 @@ func run() int {
 	pflag.Uint16VarP(&flagPort, "port", "p", 8080, "port to host Rosetta API on")
 	pflag.UintVarP(&flagTransactions, "transaction-limit", "t", 200, "maximum amount of transactions to include in a block response")
 	pflag.BoolVar(&flagSmart, "smart-status-codes", false, "enable smart non-500 HTTP status codes for Rosetta API errors")
+	pflag.BoolVarP(&flagWait, "wait-for-index", "w", false, "wait for index to be available instead of quitting right away, useful when DPS Live index bootstraps")
 
 	pflag.Parse()
 
@@ -105,10 +107,15 @@ func run() int {
 	dpsAPI := api.NewAPIClient(conn)
 	index := api.IndexFromAPI(dpsAPI, codec)
 
+wait:
 	// Deduce chain ID from DPS API to configure parameters for script exec.
 	first, err := index.First()
 	if err != nil {
 		log.Error().Err(err).Msg("could not get first height from DPS API")
+		if flagWait {
+			time.Sleep(30 * time.Second)
+			goto wait
+		}
 		return failure
 	}
 	root, err := index.Header(first)
