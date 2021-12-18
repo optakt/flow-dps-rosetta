@@ -12,33 +12,25 @@
 // License for the specific language governing permissions and limitations under
 // the License.
 
-package mocks
+package validator
 
 import (
-	"testing"
-
 	"github.com/onflow/flow-go/model/flow"
 
-	"github.com/optakt/flow-dps-rosetta/service/object"
+	"github.com/optakt/flow-dps-rosetta/service/failure"
+	"github.com/optakt/flow-dps-rosetta/service/identifier"
 )
 
-type Converter struct {
-	EventToOperationFunc func(event flow.Event) (*object.Operation, error)
-}
+// Transaction validates a transaction identifier, and if its valid, returns a matching Flow Identifier.
+func (v *Validator) Transaction(transaction identifier.Transaction) (flow.Identifier, error) {
 
-func BaselineConverter(t *testing.T) *Converter {
-	t.Helper()
-
-	c := Converter{
-		EventToOperationFunc: func(event flow.Event) (*object.Operation, error) {
-			op := GenericOperation(0)
-			return &op, nil
-		},
+	txID, err := flow.HexStringToIdentifier(transaction.Hash)
+	if err != nil {
+		return flow.ZeroID, failure.InvalidTransaction{
+			Hash:        transaction.Hash,
+			Description: failure.NewDescription(txHashInvalid),
+		}
 	}
 
-	return &c
-}
-
-func (c *Converter) EventToOperation(event flow.Event) (transaction *object.Operation, err error) {
-	return c.EventToOperationFunc(event)
+	return txID, nil
 }

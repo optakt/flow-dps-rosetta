@@ -37,9 +37,9 @@ import (
 	"github.com/onflow/flow-go/model/flow"
 	"github.com/onflow/flow-go/module/mempool/entity"
 
+	"github.com/optakt/flow-dps-rosetta/service/identifier"
+	"github.com/optakt/flow-dps-rosetta/service/object"
 	"github.com/optakt/flow-dps/models/dps"
-	"github.com/optakt/flow-rosetta/rosetta/identifier"
-	"github.com/optakt/flow-rosetta/rosetta/object"
 )
 
 // Offsets used to ensure different flow identifiers that do not overlap.

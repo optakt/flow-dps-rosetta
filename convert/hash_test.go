@@ -12,33 +12,24 @@
 // License for the specific language governing permissions and limitations under
 // the License.
 
-package mocks
+package convert_test
 
 import (
 	"testing"
 
-	"github.com/onflow/flow-go/model/flow"
+	"github.com/stretchr/testify/assert"
 
-	"github.com/optakt/flow-dps-rosetta/service/object"
+	"github.com/optakt/flow-dps-rosetta/testing/mocks"
+	"github.com/optakt/flow-dps/models/convert"
 )
 
-type Converter struct {
-	EventToOperationFunc func(event flow.Event) (*object.Operation, error)
+func TestIDToHash(t *testing.T) {
+	blockID := mocks.GenericHeader.ID()
+	got := convert.IDToHash(blockID)
+	assert.Equal(t, blockID[:], got)
 }
 
-func BaselineConverter(t *testing.T) *Converter {
-	t.Helper()
-
-	c := Converter{
-		EventToOperationFunc: func(event flow.Event) (*object.Operation, error) {
-			op := GenericOperation(0)
-			return &op, nil
-		},
-	}
-
-	return &c
-}
-
-func (c *Converter) EventToOperation(event flow.Event) (transaction *object.Operation, err error) {
-	return c.EventToOperationFunc(event)
+func TestCommitToHash(t *testing.T) {
+	got := convert.CommitToHash(mocks.GenericCommit(0))
+	assert.Equal(t, mocks.ByteSlice(mocks.GenericCommit(0)), got)
 }

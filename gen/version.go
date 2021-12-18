@@ -53,7 +53,7 @@ const (
 	rosettaVersion = "1.4.10"
 
 	pathToGoMod            = "../go.mod"
-	rosettaVersionFilePath = "../rosetta/configuration/version.go"
+	rosettaVersionFilePath = "../service/configuration/version.go"
 
 	flowModPath = "github.com/onflow/flow-go"
 	dpsModPath  = "github.com/optakt/flow-dps"

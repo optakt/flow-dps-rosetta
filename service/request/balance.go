@@ -12,33 +12,17 @@
 // License for the specific language governing permissions and limitations under
 // the License.
 
-package mocks
+package request
 
 import (
-	"testing"
-
-	"github.com/onflow/flow-go/model/flow"
-
-	"github.com/optakt/flow-dps-rosetta/service/object"
+	"github.com/optakt/flow-dps-rosetta/service/identifier"
 )
 
-type Converter struct {
-	EventToOperationFunc func(event flow.Event) (*object.Operation, error)
-}
-
-func BaselineConverter(t *testing.T) *Converter {
-	t.Helper()
-
-	c := Converter{
-		EventToOperationFunc: func(event flow.Event) (*object.Operation, error) {
-			op := GenericOperation(0)
-			return &op, nil
-		},
-	}
-
-	return &c
-}
-
-func (c *Converter) EventToOperation(event flow.Event) (transaction *object.Operation, err error) {
-	return c.EventToOperationFunc(event)
+// Balance implements the request schema for /account/balance.
+// See https://www.rosetta-api.org/docs/AccountApi.html#request
+type Balance struct {
+	NetworkID  identifier.Network    `json:"network_identifier"`
+	BlockID    identifier.Block      `json:"block_identifier"`
+	AccountID  identifier.Account    `json:"account_identifier"`
+	Currencies []identifier.Currency `json:"currencies"`
 }

@@ -12,33 +12,20 @@
 // License for the specific language governing permissions and limitations under
 // the License.
 
-package mocks
+package api
 
 import (
-	"testing"
+	"time"
 
-	"github.com/onflow/flow-go/model/flow"
-
+	"github.com/optakt/flow-dps-rosetta/service/identifier"
 	"github.com/optakt/flow-dps-rosetta/service/object"
 )
 
-type Converter struct {
-	EventToOperationFunc func(event flow.Event) (*object.Operation, error)
-}
-
-func BaselineConverter(t *testing.T) *Converter {
-	t.Helper()
-
-	c := Converter{
-		EventToOperationFunc: func(event flow.Event) (*object.Operation, error) {
-			op := GenericOperation(0)
-			return &op, nil
-		},
-	}
-
-	return &c
-}
-
-func (c *Converter) EventToOperation(event flow.Event) (transaction *object.Operation, err error) {
-	return c.EventToOperationFunc(event)
+type Retriever interface {
+	Oldest() (identifier.Block, time.Time, error)
+	Current() (identifier.Block, time.Time, error)
+	Block(rosBlockID identifier.Block) (*object.Block, []identifier.Transaction, error)
+	Transaction(rosBlockID identifier.Block, rosTxID identifier.Transaction) (*object.Transaction, error)
+	Balances(rosBlockID identifier.Block, rosAccountID identifier.Account, rosCurrencies []identifier.Currency) (identifier.Block, []object.Amount, error)
+	Sequence(rosBlockID identifier.Block, rosAccountID identifier.Account, index int) (uint64, error)
 }

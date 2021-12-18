@@ -12,33 +12,18 @@
 // License for the specific language governing permissions and limitations under
 // the License.
 
-package mocks
+package retriever
 
 import (
-	"testing"
-
 	"github.com/onflow/flow-go/model/flow"
 
-	"github.com/optakt/flow-dps-rosetta/service/object"
+	"github.com/optakt/flow-dps-rosetta/service/identifier"
 )
 
-type Converter struct {
-	EventToOperationFunc func(event flow.Event) (*object.Operation, error)
-}
-
-func BaselineConverter(t *testing.T) *Converter {
-	t.Helper()
-
-	c := Converter{
-		EventToOperationFunc: func(event flow.Event) (*object.Operation, error) {
-			op := GenericOperation(0)
-			return &op, nil
-		},
-	}
-
-	return &c
-}
-
-func (c *Converter) EventToOperation(event flow.Event) (transaction *object.Operation, err error) {
-	return c.EventToOperationFunc(event)
+// Validator represents something that can validate account, block and transaction identifiers as well as currencies.
+type Validator interface {
+	Account(rosAccountID identifier.Account) (address flow.Address, err error)
+	Block(rosBlockID identifier.Block) (height uint64, blockID flow.Identifier, err error)
+	Transaction(rosTxID identifier.Transaction) (txID flow.Identifier, err error)
+	Currency(rosCurrency identifier.Currency) (symbol string, decimals uint, err error)
 }

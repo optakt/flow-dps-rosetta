@@ -12,33 +12,21 @@
 // License for the specific language governing permissions and limitations under
 // the License.
 
-package mocks
+package api
 
 import (
-	"testing"
-
-	"github.com/onflow/flow-go/model/flow"
-
-	"github.com/optakt/flow-dps-rosetta/service/object"
+	"github.com/optakt/flow-dps-rosetta/service/identifier"
+	"github.com/optakt/flow-dps-rosetta/service/meta"
 )
 
-type Converter struct {
-	EventToOperationFunc func(event flow.Event) (*object.Operation, error)
-}
-
-func BaselineConverter(t *testing.T) *Converter {
-	t.Helper()
-
-	c := Converter{
-		EventToOperationFunc: func(event flow.Event) (*object.Operation, error) {
-			op := GenericOperation(0)
-			return &op, nil
-		},
-	}
-
-	return &c
-}
-
-func (c *Converter) EventToOperation(event flow.Event) (transaction *object.Operation, err error) {
-	return c.EventToOperationFunc(event)
+// Configuration represents the configuration parameters of a particular blockchain from
+// the Rosetta API's perspective. It details some blockchain metadata, its supported operations,
+// errors, and more.
+// See https://www.rosetta-api.org/docs/NetworkApi.html#networkoptions
+type Configuration interface {
+	Network() identifier.Network
+	Version() meta.Version
+	Operations() []string
+	Statuses() []meta.StatusDefinition
+	Errors() []meta.ErrorDefinition
 }

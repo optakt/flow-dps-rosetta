@@ -1,5 +1,5 @@
-/cmd/flow-rosetta-server/flow-rosetta-server
+/flow-go/
+/flow-dps-rosetta
 *.cdc
 *.checkpoint
 *.log
-flow-go/

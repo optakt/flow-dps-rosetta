@@ -12,33 +12,23 @@
 // License for the specific language governing permissions and limitations under
 // the License.
 
-package mocks
+package api
 
-import (
-	"testing"
-
-	"github.com/onflow/flow-go/model/flow"
-
-	"github.com/optakt/flow-dps-rosetta/service/object"
-)
-
-type Converter struct {
-	EventToOperationFunc func(event flow.Event) (*object.Operation, error)
+// Data implements the Rosetta Data API specification.
+// See https://www.rosetta-api.org/docs/data_api_introduction.html
+type Data struct {
+	config   Configuration
+	retrieve Retriever
+	validate Validator
 }
 
-func BaselineConverter(t *testing.T) *Converter {
-	t.Helper()
-
-	c := Converter{
-		EventToOperationFunc: func(event flow.Event) (*object.Operation, error) {
-			op := GenericOperation(0)
-			return &op, nil
-		},
+// NewData creates a new instance of the Data API using the given configuration to answer configuration queries
+// and the given retriever to answer blockchain data queries.
+func NewData(config Configuration, retrieve Retriever, validate Validator) *Data {
+	d := Data{
+		config:   config,
+		retrieve: retrieve,
+		validate: validate,
 	}
-
-	return &c
-}
-
-func (c *Converter) EventToOperation(event flow.Event) (transaction *object.Operation, err error) {
-	return c.EventToOperationFunc(event)
+	return &d
 }

@@ -12,33 +12,30 @@
 // License for the specific language governing permissions and limitations under
 // the License.
 
-package mocks
+package retriever
 
 import (
-	"testing"
-
 	"github.com/onflow/flow-go/model/flow"
 
-	"github.com/optakt/flow-dps-rosetta/service/object"
+	"github.com/optakt/flow-dps-rosetta/service/identifier"
 )
 
-type Converter struct {
-	EventToOperationFunc func(event flow.Event) (*object.Operation, error)
-}
-
-func BaselineConverter(t *testing.T) *Converter {
-	t.Helper()
-
-	c := Converter{
-		EventToOperationFunc: func(event flow.Event) (*object.Operation, error) {
-			op := GenericOperation(0)
-			return &op, nil
-		},
+func rosettaTxID(txID flow.Identifier) identifier.Transaction {
+	return identifier.Transaction{
+		Hash: txID.String(),
 	}
-
-	return &c
 }
 
-func (c *Converter) EventToOperation(event flow.Event) (transaction *object.Operation, err error) {
-	return c.EventToOperationFunc(event)
+func rosettaBlockID(height uint64, blockID flow.Identifier) identifier.Block {
+	return identifier.Block{
+		Index: &height,
+		Hash:  blockID.String(),
+	}
+}
+
+func rosettaCurrency(symbol string, decimals uint) identifier.Currency {
+	return identifier.Currency{
+		Symbol:   symbol,
+		Decimals: decimals,
+	}
 }

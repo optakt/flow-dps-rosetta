@@ -12,33 +12,15 @@
 // License for the specific language governing permissions and limitations under
 // the License.
 
-package mocks
+package retriever
 
 import (
-	"testing"
-
 	"github.com/onflow/flow-go/model/flow"
 
 	"github.com/optakt/flow-dps-rosetta/service/object"
 )
 
-type Converter struct {
-	EventToOperationFunc func(event flow.Event) (*object.Operation, error)
-}
-
-func BaselineConverter(t *testing.T) *Converter {
-	t.Helper()
-
-	c := Converter{
-		EventToOperationFunc: func(event flow.Event) (*object.Operation, error) {
-			op := GenericOperation(0)
-			return &op, nil
-		},
-	}
-
-	return &c
-}
-
-func (c *Converter) EventToOperation(event flow.Event) (transaction *object.Operation, err error) {
-	return c.EventToOperationFunc(event)
+// Converter represents something that can convert Flow events into Rosetta operations.
+type Converter interface {
+	EventToOperation(event flow.Event) (operation *object.Operation, err error)
 }

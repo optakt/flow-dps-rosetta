@@ -1,4 +1,4 @@
-module github.com/optakt/flow-rosetta
+module github.com/optakt/flow-dps-rosetta
 
 go 1.17
 

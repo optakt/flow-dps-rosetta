@@ -12,33 +12,16 @@
 // License for the specific language governing permissions and limitations under
 // the License.
 
-package mocks
+package response
 
 import (
-	"testing"
-
-	"github.com/onflow/flow-go/model/flow"
-
+	"github.com/optakt/flow-dps-rosetta/service/identifier"
 	"github.com/optakt/flow-dps-rosetta/service/object"
 )
 
-type Converter struct {
-	EventToOperationFunc func(event flow.Event) (*object.Operation, error)
-}
-
-func BaselineConverter(t *testing.T) *Converter {
-	t.Helper()
-
-	c := Converter{
-		EventToOperationFunc: func(event flow.Event) (*object.Operation, error) {
-			op := GenericOperation(0)
-			return &op, nil
-		},
-	}
-
-	return &c
-}
-
-func (c *Converter) EventToOperation(event flow.Event) (transaction *object.Operation, err error) {
-	return c.EventToOperationFunc(event)
+// Block implements the response schema for /block.
+// See https://www.rosetta-api.org/docs/BlockApi.html#200---ok
+type Block struct {
+	Block             *object.Block            `json:"block"`
+	OtherTransactions []identifier.Transaction `json:"other_transactions,omitempty"`
 }
